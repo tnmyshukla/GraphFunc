@@ -2,13 +2,20 @@ plugins {
 	id 'org.springframework.boot' version '2.5.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'pmd'
+	id 'checkstyle'
 	id 'war'
 }
 
 group = 'com.SpringBoot'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-
+checkstyle {
+	toolVersion '8.35'
+	ignoreFailures = true
+	maxWarnings = 0
+	sourceSets = [project.sourceSets.main]
+}
 repositories {
 	mavenCentral()
 	maven {
@@ -37,4 +44,15 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+tasks.withType(Pmd){
+	reports{
+		xml.enabled=true
+		html.enabled=true
+	}
+}
+pmd {
+	ruleSetConfig = rootProject.resources.text.fromFile('config/pmd/pmd-rules.xml')
+	pmdTest.enabled=false
+	ignoreFailures = true
 }
